@@ -7,7 +7,7 @@ In terminal run
 Creating docker container blocks in prefect 
 Alternative way to create DockerContainer block in the UI is building and running make_docker_block.py
 
-Create docker_deploy.py
+Create docker_deploy.py (in flows folder)
 
 In terminal run : python docker_deploy.py
 
