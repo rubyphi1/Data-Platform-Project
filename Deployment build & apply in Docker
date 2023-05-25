@@ -1,8 +1,8 @@
 Create Dockerfile
 
 In terminal run 
-  docker image build -t rubyphi/prefect:zoom .   (rubyphi : docker username)
-  docker image push rubyphi/prefect:zoom
+  docker image build -t rubyphi/prefect:platform .   (rubyphi : docker username)
+  docker image push rubyphi/prefect:platform
 
 Creating docker container blocks in prefect 
 Alternative way to create DockerContainer block in the UI is building and running make_docker_block.py
@@ -16,4 +16,4 @@ if we want to use a local Orion API server: In terminal run :
   prefect config set PREFECT_API_URL="http://127.0.0.1:4200/api"
 
 Run agent : prefect agent start -q default 
-Now we can run our flow: prefect deployment run etl-parent-flow/docker-flow -p"   #-p : Overwrite parameters
+Now we can run our flow: prefect deployment run etl-parent-flow/docker-flow   #-p : Overwrite parameters
