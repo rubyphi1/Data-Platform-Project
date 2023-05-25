@@ -6,13 +6,13 @@ from random import randint
 import fastparquet
 
 
-@task(retries=3)    
+@task(log_prints = True,retries=3)    
 def fetch(dataset_url: str) -> pd.DataFrame:
     df = pd.read_parquet(dataset_url, engine='fastparquet')
     return df
 
-#Maybe the local path when run on Prefect is different so try other local path
-@task()
+
+@task(log_prints = True)
 def write_local(df: pd.DataFrame, color: str, dataset_file: str) -> Path:
     """Write DataFrame out locally as parquet file"""
     path = f"data/{color}/{dataset_file}"
@@ -20,7 +20,7 @@ def write_local(df: pd.DataFrame, color: str, dataset_file: str) -> Path:
     return path
 
 
-@task()
+@task(log_prints = True)
 def write_gcs(path) -> None:
     """Upload local parquet file to GCS"""
     gcs_block = GcsBucket.load("gcs-bucket")
@@ -37,7 +37,7 @@ def etl_web_to_gcs(month : int,year : int,  color : str) -> None:
     df = fetch(dataset_url)
     path = write_local(df, color, dataset_file)
     write_gcs(path)
-    
+ 
     
 @flow()
 def etl_parent_flow(
