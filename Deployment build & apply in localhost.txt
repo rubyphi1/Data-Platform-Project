@@ -1,8 +1,8 @@
 CLI deployment ( Interface : CLI)
 
-In terminal run: prefect deployment  build ./parameterized_flow.py:etl_parent_flow -n"Parameterized ETL"
+In terminal run: prefect deployment  build ./parameterized_flow.py:etl_parent_flow -n"Parameterized ETL" 
 
-Add parameters to the yaml just created such as {"color":"yellow","months":[4],"years":2022}
+Add parameters to the yaml just created such as {"months":[4],"year":2022,"color":"yellow"}
 
 prefect deployment apply etl_parent_flow-deployment.yaml
 
