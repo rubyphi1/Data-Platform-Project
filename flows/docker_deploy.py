@@ -1,8 +1,8 @@
-from prefect.deployments import Deployment
 from parameterized_flow import etl_parent_flow
 from prefect.infrastructure.docker import DockerContainer
+from prefect.deployments import Deployment
 
-docker_block = DockerContainer.load("zoom")
+docker_block = DockerContainer.load("platform")
 
 docker_dep = Deployment.build_from_flow(
     flow=etl_parent_flow,
