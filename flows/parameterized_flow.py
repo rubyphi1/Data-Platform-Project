@@ -1,5 +1,6 @@
 from pathlib import Path
 import pandas as pd
+import numpy as np
 from prefect import flow, task
 from prefect_gcp.cloud_storage import GcsBucket
 from random import randint
@@ -14,6 +15,14 @@ def fetch_transform(dataset_url: str) -> pd.DataFrame:
     print(f"post: missing passenger count: {df['passenger_count'].isna().sum()}")
     return df
 
+@task(log_prints = True,retries=3)
+def merge_table_id(latest_id:int,df:pd.DataFrame) -> pd.DataFrame:
+    a_shape = (df.shape[0], 1)
+    fill_value = latest_id
+    id = np.full(a_shape, int(fill_value))
+    id_df = pd.DataFrame(id, columns= ['ID'])
+    merge_df = pd.concat([id_df, df], axis=1)
+    return merge_df
 
 @task(log_prints = True)
 def write_local(df: pd.DataFrame, color: str, dataset_file: str) -> Path:
@@ -49,9 +58,14 @@ def etl_web_to_gcs_to_bq(month : int,year : int,  color : str) -> None:
     """The main ETL function"""
     dataset_file = f"{color}_tripdata_{year}-{month:02}"
     dataset_url =f"https://d37ci6vzurychx.cloudfront.net/trip-data/{dataset_file}.parquet"
-
-    df = fetch_transform(dataset_url)
-    path = write_local(df, color, dataset_file)
+    
+    latest_id = int(f"{year}{month}")
+    
+    df = fetch_transform(dataset_url) 
+    
+    merge_df = merge_table_id(latest_id,df)
+    
+    path = write_local(merge_df, color, dataset_file)
     write_gcs(path)
     write_bq(df)
  
