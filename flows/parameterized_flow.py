@@ -127,7 +127,7 @@ def etl_web_to_gcs_to_bq(color : str) -> None:
         return
     
 @flow()
-def etl_parent_flow(color: str):
+def etl_parent_flow(color: str = "yellow"):
         etl_web_to_gcs_to_bq(color)
         
 
