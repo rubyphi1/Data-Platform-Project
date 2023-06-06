@@ -1,0 +1,66 @@
+###
+### A complete description of a Prefect Deployment for flow 'etl-parent-flow'
+###
+name: Parameterized ETL
+description: null
+version: 995c59e8814d2e58bceb0547c48e613a
+# The work queue that will handle this deployment's runs
+work_queue_name: default
+work_pool_name: default-agent-pool
+tags: []
+parameters:
+  months:
+  - 4
+  year: 2022
+  color: yellow
+schedule: null
+is_schedule_active: true
+infra_overrides: {}
+
+###
+### DO NOT EDIT BELOW THIS LINE
+###
+flow_name: etl-parent-flow
+manifest_path: null
+infrastructure:
+  type: process
+  env: {}
+  labels: {}
+  name: null
+  command: null
+  stream_output: true
+  working_dir: null
+  _block_document_id: 117cc56b-baf9-4881-8b25-7197b8360894
+  _block_document_name: anonymous-34b7fe63-ea81-4d5b-b5a4-857cc09d310a
+  _is_anonymous: true
+  block_type_slug: process
+  _block_type_slug: process
+storage: null
+path: C:\Users\Dell\Desktop\data-platform-project\flows
+entrypoint: parameterized_flow.py:etl_parent_flow
+parameter_openapi_schema:
+  title: Parameters
+  type: object
+  properties:
+    months:
+      title: months
+      default:
+      - 4
+      - 5
+      position: 0
+      type: array
+      items:
+        type: integer
+    year:
+      title: year
+      default: 2022
+      position: 1
+      type: integer
+    color:
+      title: color
+      default: yellow
+      position: 2
+      type: string
+  required: null
+  definitions: null
+timestamp: '2023-05-29T06:03:56.554423+00:00'

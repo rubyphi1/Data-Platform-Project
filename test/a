@@ -1,0 +1,52 @@
+import pandas as pd  
+import numpy as np
+year=2022
+month=1
+id = int(f"{year}{month}")
+print(id)
+a = 20212
+# if(a > id):
+#     print('True')
+# else:
+#     print('False')
+# assign data of lists.  
+
+# data = {'Name': ['Tom', 'Joseph', 'Krish', 'John'], 'Age': [20, 21, 19, 18]}  
+  
+# # Create DataFrame  
+# df = pd.DataFrame(data) 
+# print(df) 
+# print(df.shape[1])
+
+# a_shape = (df.shape[1], 1)  
+# fill_value = id
+# a = np.full(a_shape, fill_value)
+# d = pd.DataFrame(a, columns= ['id'])
+# print(d)
+
+from datetime import datetime
+
+# today = datetime.now()
+# month = 1
+# year = 2023
+# if month == 1:
+#     month = 12
+#     year = year -1
+# else:
+#     month = month -1
+# id = int(f"{year}{month:02}")
+# print(id)
+def get_today_id():
+    today = datetime.now()
+    month = today.month 
+    year = today.year
+    if month == 1:
+        month = 12
+        year = year -1
+    else:
+        month = month -1
+    id = int(f"{year}{month:02}")
+    return month,year,id
+month = get_today_id()[0]
+year = get_today_id()[1]
+print(month)
