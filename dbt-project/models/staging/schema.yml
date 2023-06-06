@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: staging
+    database: utopian-outlet-384405
+    schema: data_project
+
+    tables:
+      - name: green_tripdata
+      - name: yellow_tripdata
