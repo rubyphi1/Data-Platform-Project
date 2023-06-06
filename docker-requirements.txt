@@ -1,6 +1,0 @@
-pandas
-prefect
-prefect-gcp[cloud_storage]
-protobuf
-pyarrow
-fastparquet
