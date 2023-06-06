@@ -53,6 +53,7 @@ def query_max_id(gcp_credentials_block) -> int:
 
 @task(log_prints = True)#,retries=3, cache_key_fn =task_input_hash,cache_expiration = timedelta(days=1))    
 def fetch_transform(dataset_url: str) -> pd.DataFrame:
+
     df = pd.read_parquet(dataset_url, engine='fastparquet')
     print(f"pre: missing passenger count: {df['passenger_count'].isna().sum()}")
     df["passenger_count"].fillna(0, inplace=True)
@@ -60,19 +61,19 @@ def fetch_transform(dataset_url: str) -> pd.DataFrame:
     return df
 
 @task(log_prints = True,retries=3)
-def add_id(today_id:int,df:pd.DataFrame) -> pd.DataFrame:
+def merge_table_id(today_id:int,df:pd.DataFrame) -> pd.DataFrame:
     a_shape = (df.shape[0], 1)
     fill_value = today_id
     id = np.full(a_shape, int(fill_value))
     id_df = pd.DataFrame(id, columns= ['DataID'])
-    new_df = pd.concat([id_df, df], axis=1)
-    return new_df
+    merge_df = pd.concat([id_df, df], axis=1)
+    return merge_df
 
 @task(log_prints = True)#, cache_key_fn =task_input_hash,cache_expiration = timedelta(days=1))
-def write_local(new_df: pd.DataFrame, color: str, dataset_file: str) -> Path:
+def write_local(merge_df: pd.DataFrame, color: str, dataset_file: str) -> Path:
     """Write DataFrame out locally as parquet file"""
     path = f"data/{color}/{dataset_file}"
-    new_df.to_parquet(path, compression="gzip")
+    merge_df.to_parquet(path, compression="gzip")
     # # Checking where merge df is saved
     #print("File location using os.getcwd():", os.getcwd())
     return path
@@ -90,7 +91,7 @@ def write_gcs(path):
 def write_bq(gcs_path, gcp_credentials_block) -> None:
     """Write DataFrame to BiqQuery"""
     client = bigquery.Client(credentials=gcp_credentials_block.get_credentials_from_service_account())
-    table_id = "utopian-outlet-384405.data_project.yellow_tripdata"
+    table_id = "utopian-outlet-384405.data_project.taxi_rides"
     bucket_name = "taxi_ny"
     job_config = bigquery.LoadJobConfig(
     source_format=bigquery.SourceFormat.PARQUET,)
@@ -117,9 +118,9 @@ def etl_web_to_gcs_to_bq(color : str) -> None:
 
         df = fetch_transform(dataset_url) 
             
-        new_df = add_id(today_id,df)
+        merge_df = merge_table_id(today_id,df)
             
-        path = write_local(new_df, color, dataset_file)
+        path = write_local(merge_df, color, dataset_file)
         gcs_path =  write_gcs(path)
         write_bq(gcs_path, gcp_credentials_block)
     else:
