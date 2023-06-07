@@ -6,9 +6,8 @@ with trips_data as (
     select 
     -- Reveneue grouping 
     pickup_zone as revenue_zone,
-    date_trunc(pickup_datetime, month) as revenue_month, 
+    dataid as revenue_month, 
     --Note: For BQ use instead: date_trunc(pickup_datetime, month) as revenue_month, 
-
     service_type, 
 
     -- Revenue calculation 
@@ -29,3 +28,4 @@ with trips_data as (
 
     from trips_data
     group by 1,2,3
+    order by 1,2 asc
